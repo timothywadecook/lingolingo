@@ -1,0 +1,10 @@
+{
+  "auth": {
+    "mobile2c6eb364": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
+    }
+  }
+}
