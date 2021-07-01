@@ -1,6 +1,9 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
+import { View } from "react-native-ui-lib";
+import { RootStack } from "./navigation/RootStack";
+import "./constants/uilibrary.config";
 //
 // AWS Amplify Config
 // @ts-ignore
@@ -18,9 +21,8 @@ Amplify.configure({
 function App() {
   return (
     <View style={styles.container}>
-      <Text style={{ fontSize: 40, fontWeight: "500" }}>LingoLingo</Text>
-      <Text>Eliminate your accent for free</Text>
       <StatusBar style="auto" />
+      <RootStack />
     </View>
   );
 }
@@ -31,7 +33,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
   },
 });
