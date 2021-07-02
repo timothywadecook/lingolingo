@@ -1,0 +1,15 @@
+projects:
+  passages:
+    schemaPath: graphql_schema.json
+    includes:
+      - mobile/api/graphql/**/*.ts
+    excludes:
+      - ./amplify/**
+    extensions:
+      amplify:
+        codeGenTarget: typescript
+        generatedFileName: mobile/api/passagesApi.ts
+        docsFilePath: mobile/api/graphql
+extensions:
+  amplify:
+    version: 3

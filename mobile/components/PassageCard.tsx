@@ -5,7 +5,6 @@ type Passage = {
   text: string;
   language: string;
   difficulty: number;
-  fluency: number;
 };
 
 type Props = {
@@ -21,7 +20,6 @@ export function PassageCard({ passage }: Props) {
       <View row spread>
         <Text body>{passage.difficulty}</Text>
         <Text body>{passage.language}</Text>
-        <Text body>{passage.fluency}</Text>
       </View>
     </Card>
   );

@@ -1,0 +1,12 @@
+type Passage
+  @model
+  @key(
+    name: "relevantPassagesIndex"
+    fields: ["language", "difficulty"]
+    queryField: "passagesByLanguageAndDifficulty"
+  ) {
+  id: ID!
+  text: String!
+  difficulty: Int!
+  language: String!
+}

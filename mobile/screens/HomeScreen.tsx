@@ -1,7 +1,12 @@
 import React, { useEffect } from "react";
-import { View, Text, Card, Button } from "react-native-ui-lib";
-import { NewPassageForm } from "../components/NewPassageForm";
+import { Button } from "react-native-ui-lib";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { PassageCardList } from "../components/PassageCardList";
+import { GradingCardList } from "../components/GradingCardList";
+
+// Grading Reading     Points
+
+const Tab = createMaterialTopTabNavigator();
 
 export function HomeScreen({ navigation }) {
   useEffect(() => {
@@ -26,9 +31,9 @@ export function HomeScreen({ navigation }) {
   }, []);
 
   return (
-    <View flex>
-      <NewPassageForm />
-      <PassageCardList />
-    </View>
+    <Tab.Navigator>
+      <Tab.Screen name="Grading" component={GradingCardList} />
+      <Tab.Screen name="Reading" component={PassageCardList} />
+    </Tab.Navigator>
   );
 }

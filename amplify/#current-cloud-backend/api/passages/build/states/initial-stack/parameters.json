@@ -1,0 +1,8 @@
+{
+    "CreateAPIKey": 1,
+    "AppSyncApiName": "passages",
+    "DynamoDBBillingMode": "PAY_PER_REQUEST",
+    "DynamoDBEnableServerSideEncryption": false,
+    "S3DeploymentBucket": "amplify-mobile-dev-100910-deployment",
+    "S3DeploymentRootKey": "amplify-appsync-files/3b8d9e23bd279c15018894bb5b62661ef917f3ec"
+}
