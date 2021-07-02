@@ -8,5 +8,50 @@ type Passage
   id: ID!
   text: String!
   difficulty: Int!
-  language: String!
+  language: Language!
+}
+
+type Reading
+  @model
+  @key(
+    name: "readingsByReaderIndex"
+    fields: ["readerId"]
+    queryField: "readingsByReaderId"
+  ) {
+  id: ID!
+  passage: Passage @connection
+  recording: Recording!
+  language: Language!
+  readerId: ID!
+  grades: [Grade] @connection
+}
+
+type Grade
+  @model
+  @key(
+    name: "gradesByReaderId"
+    fields: ["readerId"]
+    queryField: "gradesByReaderId"
+  )
+  @key(
+    name: "gradesByGraderId"
+    fields: ["graderId"]
+    queryField: "gradesByGraderId"
+  ) {
+  id: ID!
+  readerId: ID!
+  graderId: ID!
+  soundsNative: Int!
+  understandable: Int!
+}
+
+enum Language {
+  english
+  spanish
+}
+
+type Recording {
+  bucket: String!
+  key: String!
+  region: String!
 }

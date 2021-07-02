@@ -23,7 +23,7 @@
         "s3TemplateURL": "https://s3.amazonaws.com/amplify-mobile-dev-100910-deployment/amplify-cfn-templates/auth/mobile2c6eb364-cloudformation-template.yml",
         "logicalId": "authmobile2c6eb364"
       },
-      "lastPushTimeStamp": "2021-07-02T14:55:08.747Z",
+      "lastPushTimeStamp": "2021-07-02T21:22:10.764Z",
       "output": {
         "UserPoolId": "us-east-1_IMBRMSBt9",
         "AppClientIDWeb": "5umctqrrp6q5ka96f48uj22c1s",
@@ -59,8 +59,24 @@
         "s3TemplateURL": "https://s3.amazonaws.com/amplify-mobile-dev-100910-deployment/amplify-cfn-templates/api/cloudformation-template.json",
         "logicalId": "apipassages"
       },
-      "lastPushTimeStamp": "2021-07-02T14:55:10.914Z",
-      "lastPushDirHash": "qtkM6JHVSamFeB9kBbwl3XfNZL8="
+      "lastPushTimeStamp": "2021-07-02T21:22:14.207Z",
+      "lastPushDirHash": "0wcum8cuJnS86QhbHjg6Ao86NFM="
+    }
+  },
+  "storage": {
+    "recordings": {
+      "service": "S3",
+      "providerPlugin": "awscloudformation",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-mobile-dev-100910-deployment/amplify-cfn-templates/storage/s3-cloudformation-template.json",
+        "logicalId": "storagerecordings"
+      },
+      "lastPushTimeStamp": "2021-07-02T21:22:10.770Z",
+      "output": {
+        "BucketName": "lingolingorecordings100910-dev",
+        "Region": "us-east-1"
+      },
+      "lastPushDirHash": "UVOqfKtn1iP0fxsfXhOSGQTqsO0="
     }
   }
 }

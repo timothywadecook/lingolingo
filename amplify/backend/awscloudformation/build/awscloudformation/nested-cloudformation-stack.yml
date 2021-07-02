@@ -138,7 +138,41 @@
           "DynamoDBBillingMode": "PAY_PER_REQUEST",
           "DynamoDBEnableServerSideEncryption": false,
           "S3DeploymentBucket": "amplify-mobile-dev-100910-deployment",
-          "S3DeploymentRootKey": "amplify-appsync-files/207ca9e12d49b58d50684189de7694c03120055a",
+          "S3DeploymentRootKey": "amplify-appsync-files/3920f508485a49a9e54c98f6cc3467c0038e97cc",
+          "env": "dev"
+        }
+      }
+    },
+    "storagerecordings": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "TemplateURL": "https://s3.amazonaws.com/amplify-mobile-dev-100910-deployment/amplify-cfn-templates/storage/s3-cloudformation-template.json",
+        "Parameters": {
+          "bucketName": "lingolingorecordings",
+          "authPolicyName": "s3_amplify_bf86b6d0",
+          "unauthPolicyName": "s3_amplify_bf86b6d0",
+          "authRoleName": {
+            "Ref": "AuthRoleName"
+          },
+          "unauthRoleName": {
+            "Ref": "UnauthRoleName"
+          },
+          "selectedGuestPermissions": "s3:GetObject,s3:ListBucket",
+          "selectedAuthenticatedPermissions": "s3:PutObject,s3:GetObject,s3:ListBucket",
+          "s3PermissionsAuthenticatedPublic": "s3:PutObject,s3:GetObject",
+          "s3PublicPolicy": "Public_policy_3e0fb081",
+          "s3PermissionsAuthenticatedUploads": "s3:PutObject",
+          "s3UploadsPolicy": "Uploads_policy_3e0fb081",
+          "s3PermissionsAuthenticatedProtected": "s3:PutObject,s3:GetObject",
+          "s3ProtectedPolicy": "Protected_policy_3e0fb081",
+          "s3PermissionsAuthenticatedPrivate": "s3:PutObject,s3:GetObject",
+          "s3PrivatePolicy": "Private_policy_3e0fb081",
+          "AuthenticatedAllowList": "ALLOW",
+          "s3ReadPolicy": "read_policy_3e0fb081",
+          "s3PermissionsGuestPublic": "DISALLOW",
+          "s3PermissionsGuestUploads": "DISALLOW",
+          "GuestAllowList": "DISALLOW",
+          "triggerFunction": "NONE",
           "env": "dev"
         }
       }

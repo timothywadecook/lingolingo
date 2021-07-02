@@ -2,9 +2,41 @@ type Passage {
   id: ID!
   text: String!
   difficulty: Int!
-  language: String!
+  language: Language!
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
+}
+
+type Reading {
+  id: ID!
+  passage: Passage
+  recording: Recording!
+  language: Language!
+  readerId: ID!
+  grades(filter: ModelGradeFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelGradeConnection
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Grade {
+  id: ID!
+  readerId: ID!
+  graderId: ID!
+  soundsNative: Int!
+  understandable: Int!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+enum Language {
+  english
+  spanish
+}
+
+type Recording {
+  bucket: String!
+  key: String!
+  region: String!
 }
 
 enum ModelSortDirection {
@@ -90,11 +122,16 @@ input ModelSizeInput {
   between: [Int]
 }
 
+input ModelLanguageInput {
+  eq: Language
+  ne: Language
+}
+
 input ModelPassageFilterInput {
   id: ModelIDInput
   text: ModelStringInput
   difficulty: ModelIntInput
-  language: ModelStringInput
+  language: ModelLanguageInput
   and: [ModelPassageFilterInput]
   or: [ModelPassageFilterInput]
   not: ModelPassageFilterInput
@@ -116,21 +153,28 @@ enum ModelAttributeTypes {
 type Query {
   getPassage(id: ID!): Passage
   listPassages(filter: ModelPassageFilterInput, limit: Int, nextToken: String): ModelPassageConnection
-  passagesByLanguageAndDifficulty(language: String, difficulty: ModelIntKeyConditionInput, sortDirection: ModelSortDirection, filter: ModelPassageFilterInput, limit: Int, nextToken: String): ModelPassageConnection
+  getReading(id: ID!): Reading
+  listReadings(filter: ModelReadingFilterInput, limit: Int, nextToken: String): ModelReadingConnection
+  getGrade(id: ID!): Grade
+  listGrades(filter: ModelGradeFilterInput, limit: Int, nextToken: String): ModelGradeConnection
+  passagesByLanguageAndDifficulty(language: Language, difficulty: ModelIntKeyConditionInput, sortDirection: ModelSortDirection, filter: ModelPassageFilterInput, limit: Int, nextToken: String): ModelPassageConnection
+  readingsByReaderId(readerId: ID, sortDirection: ModelSortDirection, filter: ModelReadingFilterInput, limit: Int, nextToken: String): ModelReadingConnection
+  gradesByReaderId(readerId: ID, sortDirection: ModelSortDirection, filter: ModelGradeFilterInput, limit: Int, nextToken: String): ModelGradeConnection
+  gradesByGraderId(graderId: ID, sortDirection: ModelSortDirection, filter: ModelGradeFilterInput, limit: Int, nextToken: String): ModelGradeConnection
 }
 
 input CreatePassageInput {
   id: ID
   text: String!
   difficulty: Int!
-  language: String!
+  language: Language!
 }
 
 input UpdatePassageInput {
   id: ID!
   text: String
   difficulty: Int
-  language: String
+  language: Language
 }
 
 input DeletePassageInput {
@@ -141,12 +185,18 @@ type Mutation {
   createPassage(input: CreatePassageInput!, condition: ModelPassageConditionInput): Passage
   updatePassage(input: UpdatePassageInput!, condition: ModelPassageConditionInput): Passage
   deletePassage(input: DeletePassageInput!, condition: ModelPassageConditionInput): Passage
+  createReading(input: CreateReadingInput!, condition: ModelReadingConditionInput): Reading
+  updateReading(input: UpdateReadingInput!, condition: ModelReadingConditionInput): Reading
+  deleteReading(input: DeleteReadingInput!, condition: ModelReadingConditionInput): Reading
+  createGrade(input: CreateGradeInput!, condition: ModelGradeConditionInput): Grade
+  updateGrade(input: UpdateGradeInput!, condition: ModelGradeConditionInput): Grade
+  deleteGrade(input: DeleteGradeInput!, condition: ModelGradeConditionInput): Grade
 }
 
 input ModelPassageConditionInput {
   text: ModelStringInput
   difficulty: ModelIntInput
-  language: ModelStringInput
+  language: ModelLanguageInput
   and: [ModelPassageConditionInput]
   or: [ModelPassageConditionInput]
   not: ModelPassageConditionInput
@@ -156,6 +206,108 @@ type Subscription {
   onCreatePassage: Passage @aws_subscribe(mutations: ["createPassage"])
   onUpdatePassage: Passage @aws_subscribe(mutations: ["updatePassage"])
   onDeletePassage: Passage @aws_subscribe(mutations: ["deletePassage"])
+  onCreateReading: Reading @aws_subscribe(mutations: ["createReading"])
+  onUpdateReading: Reading @aws_subscribe(mutations: ["updateReading"])
+  onDeleteReading: Reading @aws_subscribe(mutations: ["deleteReading"])
+  onCreateGrade: Grade @aws_subscribe(mutations: ["createGrade"])
+  onUpdateGrade: Grade @aws_subscribe(mutations: ["updateGrade"])
+  onDeleteGrade: Grade @aws_subscribe(mutations: ["deleteGrade"])
+}
+
+input RecordingInput {
+  bucket: String!
+  key: String!
+  region: String!
+}
+
+type ModelReadingConnection {
+  items: [Reading]
+  nextToken: String
+}
+
+input ModelReadingFilterInput {
+  id: ModelIDInput
+  language: ModelLanguageInput
+  readerId: ModelIDInput
+  and: [ModelReadingFilterInput]
+  or: [ModelReadingFilterInput]
+  not: ModelReadingFilterInput
+}
+
+input CreateReadingInput {
+  id: ID
+  recording: RecordingInput!
+  language: Language!
+  readerId: ID!
+  readingPassageId: ID
+}
+
+input UpdateReadingInput {
+  id: ID!
+  recording: RecordingInput
+  language: Language
+  readerId: ID
+  readingPassageId: ID
+}
+
+input DeleteReadingInput {
+  id: ID!
+}
+
+input ModelReadingConditionInput {
+  language: ModelLanguageInput
+  readerId: ModelIDInput
+  and: [ModelReadingConditionInput]
+  or: [ModelReadingConditionInput]
+  not: ModelReadingConditionInput
+}
+
+type ModelGradeConnection {
+  items: [Grade]
+  nextToken: String
+}
+
+input ModelGradeFilterInput {
+  id: ModelIDInput
+  readerId: ModelIDInput
+  graderId: ModelIDInput
+  soundsNative: ModelIntInput
+  understandable: ModelIntInput
+  and: [ModelGradeFilterInput]
+  or: [ModelGradeFilterInput]
+  not: ModelGradeFilterInput
+}
+
+input CreateGradeInput {
+  id: ID
+  readerId: ID!
+  graderId: ID!
+  soundsNative: Int!
+  understandable: Int!
+  readingGradesId: ID
+}
+
+input UpdateGradeInput {
+  id: ID!
+  readerId: ID
+  graderId: ID
+  soundsNative: Int
+  understandable: Int
+  readingGradesId: ID
+}
+
+input DeleteGradeInput {
+  id: ID!
+}
+
+input ModelGradeConditionInput {
+  readerId: ModelIDInput
+  graderId: ModelIDInput
+  soundsNative: ModelIntInput
+  understandable: ModelIntInput
+  and: [ModelGradeConditionInput]
+  or: [ModelGradeConditionInput]
+  not: ModelGradeConditionInput
 }
 
 input ModelIntKeyConditionInput {

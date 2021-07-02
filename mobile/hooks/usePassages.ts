@@ -20,7 +20,7 @@ export function usePassages(language = "english" as Languages, difficulty = 3) {
   const [passages, setPassages] = useState<Passage[] | []>([]);
 
   const createPassage = async (input: CreatePassage) =>
-    await API.graphql(graphqlOperation(create, { input }));
+    API.graphql(graphqlOperation(create, { input }));
 
   const [refreshing, setRefreshing] = useState(false);
   const refresh = async () => {
@@ -35,8 +35,6 @@ export function usePassages(language = "english" as Languages, difficulty = 3) {
         })
       )) as GraphQLResult<Passage[]>;
 
-      console.log("passageData", passagesData);
-
       setPassages(
         passagesData?.data?.passagesByLanguageAndDifficulty?.items || []
       );
@@ -47,14 +45,11 @@ export function usePassages(language = "english" as Languages, difficulty = 3) {
     }
   };
 
-  const getUngradedPassage = async () => null;
-
   useEffect(() => {
     refresh();
   }, [language, difficulty]);
 
   return {
-    getUngradedPassage,
     refreshing,
     refresh,
     passages,
