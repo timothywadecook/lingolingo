@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Auth } from "aws-amplify";
 
 export function useUser() {
-  const [user, setUser] = useState<{ id: number } | null>(null);
+  const [user, setUser] = useState<{ id: string } | null>(null);
 
   useEffect(() => {
     (async () => {

@@ -21,9 +21,10 @@ Colors.loadColors({
 
 Typography.loadTypographies({
   heading: { fontSize: 36, fontWeight: "600", color: Colors.textColor },
-  subheading: { fontSize: 28, fontWeight: "500" },
+  subheading: { fontSize: 28, fontWeight: "600" },
   body: { fontSize: 18, fontWeight: "400" },
   subtext: { fontSize: 14, fontWeight: "400" },
+  tiny: { fontSize: 9, fontWeight: "600" },
 });
 
 Spacings.loadSpacings({
@@ -38,7 +39,7 @@ Spacings.loadSpacings({
 
 // with plain object
 ThemeManager.setComponentTheme("Card", {
-  borderRadius: 8,
+  borderRadius: 20,
 });
 
 // with a dynamic function

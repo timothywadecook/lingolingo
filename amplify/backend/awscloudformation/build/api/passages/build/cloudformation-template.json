@@ -121,7 +121,7 @@
             {
               "Ref": "APIKeyExpirationEpoch"
             },
-            1656796715
+            1657256747
           ]
         }
       },
@@ -151,7 +151,7 @@
         }
       }
     },
-    "Passage": {
+    "Profile": {
       "Type": "AWS::CloudFormation::Stack",
       "Properties": {
         "Parameters": {
@@ -216,7 +216,7 @@
                 "Ref": "S3DeploymentRootKey"
               },
               "stacks",
-              "Passage.json"
+              "Profile.json"
             ]
           ]
         }
@@ -445,7 +445,7 @@
       },
       "DependsOn": [
         "GraphQLSchema",
-        "Passage",
+        "Reading",
         "Grade"
       ]
     },
@@ -492,7 +492,7 @@
       "DependsOn": [
         "GraphQLAPI",
         "GraphQLSchema",
-        "Passage",
+        "Profile",
         "Reading",
         "Grade",
         "ConnectionStack"

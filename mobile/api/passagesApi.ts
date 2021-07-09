@@ -2,29 +2,27 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreatePassageInput = {
+export type CreateProfileInput = {
   id?: string | null,
-  text: string,
-  difficulty: number,
-  language: Language,
+  userId: string,
+  gradingLanguage: string,
+  readingLanguage: string,
+  difficulty: string,
+  theme: string,
 };
 
-export enum Language {
-  english = "english",
-  spanish = "spanish",
-}
-
-
-export type ModelPassageConditionInput = {
-  text?: ModelStringInput | null,
-  difficulty?: ModelIntInput | null,
-  language?: ModelLanguageInput | null,
-  and?: Array< ModelPassageConditionInput | null > | null,
-  or?: Array< ModelPassageConditionInput | null > | null,
-  not?: ModelPassageConditionInput | null,
+export type ModelProfileConditionInput = {
+  userId?: ModelIDInput | null,
+  gradingLanguage?: ModelStringInput | null,
+  readingLanguage?: ModelStringInput | null,
+  difficulty?: ModelStringInput | null,
+  theme?: ModelStringInput | null,
+  and?: Array< ModelProfileConditionInput | null > | null,
+  or?: Array< ModelProfileConditionInput | null > | null,
+  not?: ModelProfileConditionInput | null,
 };
 
-export type ModelStringInput = {
+export type ModelIDInput = {
   ne?: string | null,
   eq?: string | null,
   le?: string | null,
@@ -64,67 +62,7 @@ export type ModelSizeInput = {
   between?: Array< number | null > | null,
 };
 
-export type ModelIntInput = {
-  ne?: number | null,
-  eq?: number | null,
-  le?: number | null,
-  lt?: number | null,
-  ge?: number | null,
-  gt?: number | null,
-  between?: Array< number | null > | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-};
-
-export type ModelLanguageInput = {
-  eq?: Language | null,
-  ne?: Language | null,
-};
-
-export type Passage = {
-  __typename: "Passage",
-  id: string,
-  text: string,
-  difficulty: number,
-  language: Language,
-  createdAt: string,
-  updatedAt: string,
-};
-
-export type UpdatePassageInput = {
-  id: string,
-  text?: string | null,
-  difficulty?: number | null,
-  language?: Language | null,
-};
-
-export type DeletePassageInput = {
-  id: string,
-};
-
-export type CreateReadingInput = {
-  id?: string | null,
-  recording: RecordingInput,
-  language: Language,
-  readerId: string,
-  readingPassageId?: string | null,
-};
-
-export type RecordingInput = {
-  bucket: string,
-  key: string,
-  region: string,
-};
-
-export type ModelReadingConditionInput = {
-  language?: ModelLanguageInput | null,
-  readerId?: ModelIDInput | null,
-  and?: Array< ModelReadingConditionInput | null > | null,
-  or?: Array< ModelReadingConditionInput | null > | null,
-  not?: ModelReadingConditionInput | null,
-};
-
-export type ModelIDInput = {
+export type ModelStringInput = {
   ne?: string | null,
   eq?: string | null,
   le?: string | null,
@@ -140,13 +78,34 @@ export type ModelIDInput = {
   size?: ModelSizeInput | null,
 };
 
+export type Profile = {
+  __typename: "Profile",
+  id: string,
+  userId: string,
+  gradingLanguage: string,
+  readingLanguage: string,
+  difficulty: string,
+  theme: string,
+  readings?: ModelReadingConnection | null,
+  grades?: ModelGradeConnection | null,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type ModelReadingConnection = {
+  __typename: "ModelReadingConnection",
+  items?:  Array<Reading | null > | null,
+  nextToken?: string | null,
+};
+
 export type Reading = {
   __typename: "Reading",
   id: string,
-  passage?: Passage | null,
-  recording: Recording,
-  language: Language,
+  text: string,
+  difficulty: string,
+  language: string,
   readerId: string,
+  recording: Recording,
   grades?: ModelGradeConnection | null,
   createdAt: string,
   updatedAt: string,
@@ -168,6 +127,8 @@ export type ModelGradeConnection = {
 export type Grade = {
   __typename: "Grade",
   id: string,
+  reading: Reading,
+  readingId: string,
   readerId: string,
   graderId: string,
   soundsNative: number,
@@ -176,12 +137,51 @@ export type Grade = {
   updatedAt: string,
 };
 
+export type UpdateProfileInput = {
+  id: string,
+  userId?: string | null,
+  gradingLanguage?: string | null,
+  readingLanguage?: string | null,
+  difficulty?: string | null,
+  theme?: string | null,
+};
+
+export type DeleteProfileInput = {
+  id: string,
+};
+
+export type CreateReadingInput = {
+  id?: string | null,
+  text: string,
+  difficulty: string,
+  language: string,
+  readerId: string,
+  recording: RecordingInput,
+};
+
+export type RecordingInput = {
+  bucket: string,
+  key: string,
+  region: string,
+};
+
+export type ModelReadingConditionInput = {
+  text?: ModelStringInput | null,
+  difficulty?: ModelStringInput | null,
+  language?: ModelStringInput | null,
+  readerId?: ModelIDInput | null,
+  and?: Array< ModelReadingConditionInput | null > | null,
+  or?: Array< ModelReadingConditionInput | null > | null,
+  not?: ModelReadingConditionInput | null,
+};
+
 export type UpdateReadingInput = {
   id: string,
-  recording?: RecordingInput | null,
-  language?: Language | null,
+  text?: string | null,
+  difficulty?: string | null,
+  language?: string | null,
   readerId?: string | null,
-  readingPassageId?: string | null,
+  recording?: RecordingInput | null,
 };
 
 export type DeleteReadingInput = {
@@ -190,14 +190,15 @@ export type DeleteReadingInput = {
 
 export type CreateGradeInput = {
   id?: string | null,
+  readingId: string,
   readerId: string,
   graderId: string,
   soundsNative: number,
   understandable: number,
-  readingGradesId?: string | null,
 };
 
 export type ModelGradeConditionInput = {
+  readingId?: ModelIDInput | null,
   readerId?: ModelIDInput | null,
   graderId?: ModelIDInput | null,
   soundsNative?: ModelIntInput | null,
@@ -207,52 +208,63 @@ export type ModelGradeConditionInput = {
   not?: ModelGradeConditionInput | null,
 };
 
+export type ModelIntInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+};
+
 export type UpdateGradeInput = {
   id: string,
+  readingId?: string | null,
   readerId?: string | null,
   graderId?: string | null,
   soundsNative?: number | null,
   understandable?: number | null,
-  readingGradesId?: string | null,
 };
 
 export type DeleteGradeInput = {
   id: string,
 };
 
-export type ModelPassageFilterInput = {
+export type ModelProfileFilterInput = {
   id?: ModelIDInput | null,
-  text?: ModelStringInput | null,
-  difficulty?: ModelIntInput | null,
-  language?: ModelLanguageInput | null,
-  and?: Array< ModelPassageFilterInput | null > | null,
-  or?: Array< ModelPassageFilterInput | null > | null,
-  not?: ModelPassageFilterInput | null,
+  userId?: ModelIDInput | null,
+  gradingLanguage?: ModelStringInput | null,
+  readingLanguage?: ModelStringInput | null,
+  difficulty?: ModelStringInput | null,
+  theme?: ModelStringInput | null,
+  and?: Array< ModelProfileFilterInput | null > | null,
+  or?: Array< ModelProfileFilterInput | null > | null,
+  not?: ModelProfileFilterInput | null,
 };
 
-export type ModelPassageConnection = {
-  __typename: "ModelPassageConnection",
-  items?:  Array<Passage | null > | null,
+export type ModelProfileConnection = {
+  __typename: "ModelProfileConnection",
+  items?:  Array<Profile | null > | null,
   nextToken?: string | null,
 };
 
 export type ModelReadingFilterInput = {
   id?: ModelIDInput | null,
-  language?: ModelLanguageInput | null,
+  text?: ModelStringInput | null,
+  difficulty?: ModelStringInput | null,
+  language?: ModelStringInput | null,
   readerId?: ModelIDInput | null,
   and?: Array< ModelReadingFilterInput | null > | null,
   or?: Array< ModelReadingFilterInput | null > | null,
   not?: ModelReadingFilterInput | null,
 };
 
-export type ModelReadingConnection = {
-  __typename: "ModelReadingConnection",
-  items?:  Array<Reading | null > | null,
-  nextToken?: string | null,
-};
-
 export type ModelGradeFilterInput = {
   id?: ModelIDInput | null,
+  readingId?: ModelIDInput | null,
   readerId?: ModelIDInput | null,
   graderId?: ModelIDInput | null,
   soundsNative?: ModelIntInput | null,
@@ -262,67 +274,161 @@ export type ModelGradeFilterInput = {
   not?: ModelGradeFilterInput | null,
 };
 
-export type ModelIntKeyConditionInput = {
-  eq?: number | null,
-  le?: number | null,
-  lt?: number | null,
-  ge?: number | null,
-  gt?: number | null,
-  between?: Array< number | null > | null,
-};
-
 export enum ModelSortDirection {
   ASC = "ASC",
   DESC = "DESC",
 }
 
 
-export type CreatePassageMutationVariables = {
-  input: CreatePassageInput,
-  condition?: ModelPassageConditionInput | null,
+export type ModelStringKeyConditionInput = {
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
 };
 
-export type CreatePassageMutation = {
-  createPassage?:  {
-    __typename: "Passage",
+export type CreateProfileMutationVariables = {
+  input: CreateProfileInput,
+  condition?: ModelProfileConditionInput | null,
+};
+
+export type CreateProfileMutation = {
+  createProfile?:  {
+    __typename: "Profile",
     id: string,
-    text: string,
-    difficulty: number,
-    language: Language,
+    userId: string,
+    gradingLanguage: string,
+    readingLanguage: string,
+    difficulty: string,
+    theme: string,
+    readings?:  {
+      __typename: "ModelReadingConnection",
+      items?:  Array< {
+        __typename: "Reading",
+        id: string,
+        text: string,
+        difficulty: string,
+        language: string,
+        readerId: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken?: string | null,
+    } | null,
+    grades?:  {
+      __typename: "ModelGradeConnection",
+      items?:  Array< {
+        __typename: "Grade",
+        id: string,
+        readingId: string,
+        readerId: string,
+        graderId: string,
+        soundsNative: number,
+        understandable: number,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type UpdatePassageMutationVariables = {
-  input: UpdatePassageInput,
-  condition?: ModelPassageConditionInput | null,
+export type UpdateProfileMutationVariables = {
+  input: UpdateProfileInput,
+  condition?: ModelProfileConditionInput | null,
 };
 
-export type UpdatePassageMutation = {
-  updatePassage?:  {
-    __typename: "Passage",
+export type UpdateProfileMutation = {
+  updateProfile?:  {
+    __typename: "Profile",
     id: string,
-    text: string,
-    difficulty: number,
-    language: Language,
+    userId: string,
+    gradingLanguage: string,
+    readingLanguage: string,
+    difficulty: string,
+    theme: string,
+    readings?:  {
+      __typename: "ModelReadingConnection",
+      items?:  Array< {
+        __typename: "Reading",
+        id: string,
+        text: string,
+        difficulty: string,
+        language: string,
+        readerId: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken?: string | null,
+    } | null,
+    grades?:  {
+      __typename: "ModelGradeConnection",
+      items?:  Array< {
+        __typename: "Grade",
+        id: string,
+        readingId: string,
+        readerId: string,
+        graderId: string,
+        soundsNative: number,
+        understandable: number,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type DeletePassageMutationVariables = {
-  input: DeletePassageInput,
-  condition?: ModelPassageConditionInput | null,
+export type DeleteProfileMutationVariables = {
+  input: DeleteProfileInput,
+  condition?: ModelProfileConditionInput | null,
 };
 
-export type DeletePassageMutation = {
-  deletePassage?:  {
-    __typename: "Passage",
+export type DeleteProfileMutation = {
+  deleteProfile?:  {
+    __typename: "Profile",
     id: string,
-    text: string,
-    difficulty: number,
-    language: Language,
+    userId: string,
+    gradingLanguage: string,
+    readingLanguage: string,
+    difficulty: string,
+    theme: string,
+    readings?:  {
+      __typename: "ModelReadingConnection",
+      items?:  Array< {
+        __typename: "Reading",
+        id: string,
+        text: string,
+        difficulty: string,
+        language: string,
+        readerId: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken?: string | null,
+    } | null,
+    grades?:  {
+      __typename: "ModelGradeConnection",
+      items?:  Array< {
+        __typename: "Grade",
+        id: string,
+        readingId: string,
+        readerId: string,
+        graderId: string,
+        soundsNative: number,
+        understandable: number,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -337,28 +443,22 @@ export type CreateReadingMutation = {
   createReading?:  {
     __typename: "Reading",
     id: string,
-    passage?:  {
-      __typename: "Passage",
-      id: string,
-      text: string,
-      difficulty: number,
-      language: Language,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
+    text: string,
+    difficulty: string,
+    language: string,
+    readerId: string,
     recording:  {
       __typename: "Recording",
       bucket: string,
       key: string,
       region: string,
     },
-    language: Language,
-    readerId: string,
     grades?:  {
       __typename: "ModelGradeConnection",
       items?:  Array< {
         __typename: "Grade",
         id: string,
+        readingId: string,
         readerId: string,
         graderId: string,
         soundsNative: number,
@@ -382,28 +482,22 @@ export type UpdateReadingMutation = {
   updateReading?:  {
     __typename: "Reading",
     id: string,
-    passage?:  {
-      __typename: "Passage",
-      id: string,
-      text: string,
-      difficulty: number,
-      language: Language,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
+    text: string,
+    difficulty: string,
+    language: string,
+    readerId: string,
     recording:  {
       __typename: "Recording",
       bucket: string,
       key: string,
       region: string,
     },
-    language: Language,
-    readerId: string,
     grades?:  {
       __typename: "ModelGradeConnection",
       items?:  Array< {
         __typename: "Grade",
         id: string,
+        readingId: string,
         readerId: string,
         graderId: string,
         soundsNative: number,
@@ -427,28 +521,22 @@ export type DeleteReadingMutation = {
   deleteReading?:  {
     __typename: "Reading",
     id: string,
-    passage?:  {
-      __typename: "Passage",
-      id: string,
-      text: string,
-      difficulty: number,
-      language: Language,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
+    text: string,
+    difficulty: string,
+    language: string,
+    readerId: string,
     recording:  {
       __typename: "Recording",
       bucket: string,
       key: string,
       region: string,
     },
-    language: Language,
-    readerId: string,
     grades?:  {
       __typename: "ModelGradeConnection",
       items?:  Array< {
         __typename: "Grade",
         id: string,
+        readingId: string,
         readerId: string,
         graderId: string,
         soundsNative: number,
@@ -472,6 +560,27 @@ export type CreateGradeMutation = {
   createGrade?:  {
     __typename: "Grade",
     id: string,
+    reading:  {
+      __typename: "Reading",
+      id: string,
+      text: string,
+      difficulty: string,
+      language: string,
+      readerId: string,
+      recording:  {
+        __typename: "Recording",
+        bucket: string,
+        key: string,
+        region: string,
+      },
+      grades?:  {
+        __typename: "ModelGradeConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    },
+    readingId: string,
     readerId: string,
     graderId: string,
     soundsNative: number,
@@ -490,6 +599,27 @@ export type UpdateGradeMutation = {
   updateGrade?:  {
     __typename: "Grade",
     id: string,
+    reading:  {
+      __typename: "Reading",
+      id: string,
+      text: string,
+      difficulty: string,
+      language: string,
+      readerId: string,
+      recording:  {
+        __typename: "Recording",
+        bucket: string,
+        key: string,
+        region: string,
+      },
+      grades?:  {
+        __typename: "ModelGradeConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    },
+    readingId: string,
     readerId: string,
     graderId: string,
     soundsNative: number,
@@ -508,6 +638,27 @@ export type DeleteGradeMutation = {
   deleteGrade?:  {
     __typename: "Grade",
     id: string,
+    reading:  {
+      __typename: "Reading",
+      id: string,
+      text: string,
+      difficulty: string,
+      language: string,
+      readerId: string,
+      recording:  {
+        __typename: "Recording",
+        bucket: string,
+        key: string,
+        region: string,
+      },
+      grades?:  {
+        __typename: "ModelGradeConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    },
+    readingId: string,
     readerId: string,
     graderId: string,
     soundsNative: number,
@@ -517,37 +668,78 @@ export type DeleteGradeMutation = {
   } | null,
 };
 
-export type GetPassageQueryVariables = {
+export type GetProfileQueryVariables = {
   id: string,
 };
 
-export type GetPassageQuery = {
-  getPassage?:  {
-    __typename: "Passage",
+export type GetProfileQuery = {
+  getProfile?:  {
+    __typename: "Profile",
     id: string,
-    text: string,
-    difficulty: number,
-    language: Language,
+    userId: string,
+    gradingLanguage: string,
+    readingLanguage: string,
+    difficulty: string,
+    theme: string,
+    readings?:  {
+      __typename: "ModelReadingConnection",
+      items?:  Array< {
+        __typename: "Reading",
+        id: string,
+        text: string,
+        difficulty: string,
+        language: string,
+        readerId: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken?: string | null,
+    } | null,
+    grades?:  {
+      __typename: "ModelGradeConnection",
+      items?:  Array< {
+        __typename: "Grade",
+        id: string,
+        readingId: string,
+        readerId: string,
+        graderId: string,
+        soundsNative: number,
+        understandable: number,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type ListPassagesQueryVariables = {
-  filter?: ModelPassageFilterInput | null,
+export type ListProfilesQueryVariables = {
+  filter?: ModelProfileFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
 };
 
-export type ListPassagesQuery = {
-  listPassages?:  {
-    __typename: "ModelPassageConnection",
+export type ListProfilesQuery = {
+  listProfiles?:  {
+    __typename: "ModelProfileConnection",
     items?:  Array< {
-      __typename: "Passage",
+      __typename: "Profile",
       id: string,
-      text: string,
-      difficulty: number,
-      language: Language,
+      userId: string,
+      gradingLanguage: string,
+      readingLanguage: string,
+      difficulty: string,
+      theme: string,
+      readings?:  {
+        __typename: "ModelReadingConnection",
+        nextToken?: string | null,
+      } | null,
+      grades?:  {
+        __typename: "ModelGradeConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -563,28 +755,22 @@ export type GetReadingQuery = {
   getReading?:  {
     __typename: "Reading",
     id: string,
-    passage?:  {
-      __typename: "Passage",
-      id: string,
-      text: string,
-      difficulty: number,
-      language: Language,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
+    text: string,
+    difficulty: string,
+    language: string,
+    readerId: string,
     recording:  {
       __typename: "Recording",
       bucket: string,
       key: string,
       region: string,
     },
-    language: Language,
-    readerId: string,
     grades?:  {
       __typename: "ModelGradeConnection",
       items?:  Array< {
         __typename: "Grade",
         id: string,
+        readingId: string,
         readerId: string,
         graderId: string,
         soundsNative: number,
@@ -611,23 +797,16 @@ export type ListReadingsQuery = {
     items?:  Array< {
       __typename: "Reading",
       id: string,
-      passage?:  {
-        __typename: "Passage",
-        id: string,
-        text: string,
-        difficulty: number,
-        language: Language,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
+      text: string,
+      difficulty: string,
+      language: string,
+      readerId: string,
       recording:  {
         __typename: "Recording",
         bucket: string,
         key: string,
         region: string,
       },
-      language: Language,
-      readerId: string,
       grades?:  {
         __typename: "ModelGradeConnection",
         nextToken?: string | null,
@@ -647,6 +826,27 @@ export type GetGradeQuery = {
   getGrade?:  {
     __typename: "Grade",
     id: string,
+    reading:  {
+      __typename: "Reading",
+      id: string,
+      text: string,
+      difficulty: string,
+      language: string,
+      readerId: string,
+      recording:  {
+        __typename: "Recording",
+        bucket: string,
+        key: string,
+        region: string,
+      },
+      grades?:  {
+        __typename: "ModelGradeConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    },
+    readingId: string,
     readerId: string,
     graderId: string,
     soundsNative: number,
@@ -668,6 +868,17 @@ export type ListGradesQuery = {
     items?:  Array< {
       __typename: "Grade",
       id: string,
+      reading:  {
+        __typename: "Reading",
+        id: string,
+        text: string,
+        difficulty: string,
+        language: string,
+        readerId: string,
+        createdAt: string,
+        updatedAt: string,
+      },
+      readingId: string,
       readerId: string,
       graderId: string,
       soundsNative: number,
@@ -679,24 +890,68 @@ export type ListGradesQuery = {
   } | null,
 };
 
-export type PassagesByLanguageAndDifficultyQueryVariables = {
-  language?: Language | null,
-  difficulty?: ModelIntKeyConditionInput | null,
+export type ProfileByUserIdQueryVariables = {
+  userId?: string | null,
   sortDirection?: ModelSortDirection | null,
-  filter?: ModelPassageFilterInput | null,
+  filter?: ModelProfileFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
 };
 
-export type PassagesByLanguageAndDifficultyQuery = {
-  passagesByLanguageAndDifficulty?:  {
-    __typename: "ModelPassageConnection",
+export type ProfileByUserIdQuery = {
+  profileByUserId?:  {
+    __typename: "ModelProfileConnection",
     items?:  Array< {
-      __typename: "Passage",
+      __typename: "Profile",
+      id: string,
+      userId: string,
+      gradingLanguage: string,
+      readingLanguage: string,
+      difficulty: string,
+      theme: string,
+      readings?:  {
+        __typename: "ModelReadingConnection",
+        nextToken?: string | null,
+      } | null,
+      grades?:  {
+        __typename: "ModelGradeConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type ReadingsByLanguageQueryVariables = {
+  language?: string | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelReadingFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ReadingsByLanguageQuery = {
+  readingsByLanguage?:  {
+    __typename: "ModelReadingConnection",
+    items?:  Array< {
+      __typename: "Reading",
       id: string,
       text: string,
-      difficulty: number,
-      language: Language,
+      difficulty: string,
+      language: string,
+      readerId: string,
+      recording:  {
+        __typename: "Recording",
+        bucket: string,
+        key: string,
+        region: string,
+      },
+      grades?:  {
+        __typename: "ModelGradeConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -706,6 +961,7 @@ export type PassagesByLanguageAndDifficultyQuery = {
 
 export type ReadingsByReaderIdQueryVariables = {
   readerId?: string | null,
+  language?: ModelStringKeyConditionInput | null,
   sortDirection?: ModelSortDirection | null,
   filter?: ModelReadingFilterInput | null,
   limit?: number | null,
@@ -718,27 +974,56 @@ export type ReadingsByReaderIdQuery = {
     items?:  Array< {
       __typename: "Reading",
       id: string,
-      passage?:  {
-        __typename: "Passage",
-        id: string,
-        text: string,
-        difficulty: number,
-        language: Language,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
+      text: string,
+      difficulty: string,
+      language: string,
+      readerId: string,
       recording:  {
         __typename: "Recording",
         bucket: string,
         key: string,
         region: string,
       },
-      language: Language,
-      readerId: string,
       grades?:  {
         __typename: "ModelGradeConnection",
         nextToken?: string | null,
       } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GradesByReadingIdQueryVariables = {
+  readingId?: string | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelGradeFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type GradesByReadingIdQuery = {
+  gradesByReadingId?:  {
+    __typename: "ModelGradeConnection",
+    items?:  Array< {
+      __typename: "Grade",
+      id: string,
+      reading:  {
+        __typename: "Reading",
+        id: string,
+        text: string,
+        difficulty: string,
+        language: string,
+        readerId: string,
+        createdAt: string,
+        updatedAt: string,
+      },
+      readingId: string,
+      readerId: string,
+      graderId: string,
+      soundsNative: number,
+      understandable: number,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -760,6 +1045,17 @@ export type GradesByReaderIdQuery = {
     items?:  Array< {
       __typename: "Grade",
       id: string,
+      reading:  {
+        __typename: "Reading",
+        id: string,
+        text: string,
+        difficulty: string,
+        language: string,
+        readerId: string,
+        createdAt: string,
+        updatedAt: string,
+      },
+      readingId: string,
       readerId: string,
       graderId: string,
       soundsNative: number,
@@ -785,6 +1081,17 @@ export type GradesByGraderIdQuery = {
     items?:  Array< {
       __typename: "Grade",
       id: string,
+      reading:  {
+        __typename: "Reading",
+        id: string,
+        text: string,
+        difficulty: string,
+        language: string,
+        readerId: string,
+        createdAt: string,
+        updatedAt: string,
+      },
+      readingId: string,
       readerId: string,
       graderId: string,
       soundsNative: number,
@@ -796,37 +1103,130 @@ export type GradesByGraderIdQuery = {
   } | null,
 };
 
-export type OnCreatePassageSubscription = {
-  onCreatePassage?:  {
-    __typename: "Passage",
+export type OnCreateProfileSubscription = {
+  onCreateProfile?:  {
+    __typename: "Profile",
     id: string,
-    text: string,
-    difficulty: number,
-    language: Language,
+    userId: string,
+    gradingLanguage: string,
+    readingLanguage: string,
+    difficulty: string,
+    theme: string,
+    readings?:  {
+      __typename: "ModelReadingConnection",
+      items?:  Array< {
+        __typename: "Reading",
+        id: string,
+        text: string,
+        difficulty: string,
+        language: string,
+        readerId: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken?: string | null,
+    } | null,
+    grades?:  {
+      __typename: "ModelGradeConnection",
+      items?:  Array< {
+        __typename: "Grade",
+        id: string,
+        readingId: string,
+        readerId: string,
+        graderId: string,
+        soundsNative: number,
+        understandable: number,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnUpdatePassageSubscription = {
-  onUpdatePassage?:  {
-    __typename: "Passage",
+export type OnUpdateProfileSubscription = {
+  onUpdateProfile?:  {
+    __typename: "Profile",
     id: string,
-    text: string,
-    difficulty: number,
-    language: Language,
+    userId: string,
+    gradingLanguage: string,
+    readingLanguage: string,
+    difficulty: string,
+    theme: string,
+    readings?:  {
+      __typename: "ModelReadingConnection",
+      items?:  Array< {
+        __typename: "Reading",
+        id: string,
+        text: string,
+        difficulty: string,
+        language: string,
+        readerId: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken?: string | null,
+    } | null,
+    grades?:  {
+      __typename: "ModelGradeConnection",
+      items?:  Array< {
+        __typename: "Grade",
+        id: string,
+        readingId: string,
+        readerId: string,
+        graderId: string,
+        soundsNative: number,
+        understandable: number,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnDeletePassageSubscription = {
-  onDeletePassage?:  {
-    __typename: "Passage",
+export type OnDeleteProfileSubscription = {
+  onDeleteProfile?:  {
+    __typename: "Profile",
     id: string,
-    text: string,
-    difficulty: number,
-    language: Language,
+    userId: string,
+    gradingLanguage: string,
+    readingLanguage: string,
+    difficulty: string,
+    theme: string,
+    readings?:  {
+      __typename: "ModelReadingConnection",
+      items?:  Array< {
+        __typename: "Reading",
+        id: string,
+        text: string,
+        difficulty: string,
+        language: string,
+        readerId: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken?: string | null,
+    } | null,
+    grades?:  {
+      __typename: "ModelGradeConnection",
+      items?:  Array< {
+        __typename: "Grade",
+        id: string,
+        readingId: string,
+        readerId: string,
+        graderId: string,
+        soundsNative: number,
+        understandable: number,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -836,28 +1236,22 @@ export type OnCreateReadingSubscription = {
   onCreateReading?:  {
     __typename: "Reading",
     id: string,
-    passage?:  {
-      __typename: "Passage",
-      id: string,
-      text: string,
-      difficulty: number,
-      language: Language,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
+    text: string,
+    difficulty: string,
+    language: string,
+    readerId: string,
     recording:  {
       __typename: "Recording",
       bucket: string,
       key: string,
       region: string,
     },
-    language: Language,
-    readerId: string,
     grades?:  {
       __typename: "ModelGradeConnection",
       items?:  Array< {
         __typename: "Grade",
         id: string,
+        readingId: string,
         readerId: string,
         graderId: string,
         soundsNative: number,
@@ -876,28 +1270,22 @@ export type OnUpdateReadingSubscription = {
   onUpdateReading?:  {
     __typename: "Reading",
     id: string,
-    passage?:  {
-      __typename: "Passage",
-      id: string,
-      text: string,
-      difficulty: number,
-      language: Language,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
+    text: string,
+    difficulty: string,
+    language: string,
+    readerId: string,
     recording:  {
       __typename: "Recording",
       bucket: string,
       key: string,
       region: string,
     },
-    language: Language,
-    readerId: string,
     grades?:  {
       __typename: "ModelGradeConnection",
       items?:  Array< {
         __typename: "Grade",
         id: string,
+        readingId: string,
         readerId: string,
         graderId: string,
         soundsNative: number,
@@ -916,28 +1304,22 @@ export type OnDeleteReadingSubscription = {
   onDeleteReading?:  {
     __typename: "Reading",
     id: string,
-    passage?:  {
-      __typename: "Passage",
-      id: string,
-      text: string,
-      difficulty: number,
-      language: Language,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
+    text: string,
+    difficulty: string,
+    language: string,
+    readerId: string,
     recording:  {
       __typename: "Recording",
       bucket: string,
       key: string,
       region: string,
     },
-    language: Language,
-    readerId: string,
     grades?:  {
       __typename: "ModelGradeConnection",
       items?:  Array< {
         __typename: "Grade",
         id: string,
+        readingId: string,
         readerId: string,
         graderId: string,
         soundsNative: number,
@@ -956,6 +1338,27 @@ export type OnCreateGradeSubscription = {
   onCreateGrade?:  {
     __typename: "Grade",
     id: string,
+    reading:  {
+      __typename: "Reading",
+      id: string,
+      text: string,
+      difficulty: string,
+      language: string,
+      readerId: string,
+      recording:  {
+        __typename: "Recording",
+        bucket: string,
+        key: string,
+        region: string,
+      },
+      grades?:  {
+        __typename: "ModelGradeConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    },
+    readingId: string,
     readerId: string,
     graderId: string,
     soundsNative: number,
@@ -969,6 +1372,27 @@ export type OnUpdateGradeSubscription = {
   onUpdateGrade?:  {
     __typename: "Grade",
     id: string,
+    reading:  {
+      __typename: "Reading",
+      id: string,
+      text: string,
+      difficulty: string,
+      language: string,
+      readerId: string,
+      recording:  {
+        __typename: "Recording",
+        bucket: string,
+        key: string,
+        region: string,
+      },
+      grades?:  {
+        __typename: "ModelGradeConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    },
+    readingId: string,
     readerId: string,
     graderId: string,
     soundsNative: number,
@@ -982,6 +1406,27 @@ export type OnDeleteGradeSubscription = {
   onDeleteGrade?:  {
     __typename: "Grade",
     id: string,
+    reading:  {
+      __typename: "Reading",
+      id: string,
+      text: string,
+      difficulty: string,
+      language: string,
+      readerId: string,
+      recording:  {
+        __typename: "Recording",
+        bucket: string,
+        key: string,
+        region: string,
+      },
+      grades?:  {
+        __typename: "ModelGradeConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    },
+    readingId: string,
     readerId: string,
     graderId: string,
     soundsNative: number,

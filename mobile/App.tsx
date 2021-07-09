@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState, Dispatch, SetStateAction } from "react";
+import React from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StyleSheet } from "react-native";
 import { View } from "react-native-ui-lib";
@@ -8,11 +8,15 @@ import "./constants/uilibrary.config";
 //
 // AWS Amplify Config
 // @ts-ignore
+//
 import { withAuthenticator } from "aws-amplify-react-native";
-
 import Amplify from "@aws-amplify/core";
 import config from "./aws-exports";
-import { Languages } from "./hooks/usePassages";
+import {
+  useProfile,
+  DEFAULT_PROFILE,
+  EnhancedProfile,
+} from "./hooks/useProfile";
 Amplify.configure({
   ...config,
   Analytics: {
@@ -20,26 +24,27 @@ Amplify.configure({
   },
 });
 
-// context
-type LanguageContext = [Languages, Dispatch<SetStateAction<Languages>>] | null;
-export const GradingLanguage = React.createContext<LanguageContext>(null);
-export const ReadingLanguage = React.createContext<LanguageContext>(null);
+//
+// Profile Context
+//
+export const ProfileContext =
+  React.createContext<EnhancedProfile>(DEFAULT_PROFILE);
 
+//
+// APP
+//
 function App() {
-  const grading = useState(Languages.english);
-  const reading = useState(Languages.spanish);
+  const profile = useProfile();
 
   return (
-    <GradingLanguage.Provider value={grading}>
-      <ReadingLanguage.Provider value={reading}>
-        <View style={styles.container}>
-          <SafeAreaProvider>
-            <StatusBar style="auto" />
-            <RootStack />
-          </SafeAreaProvider>
-        </View>
-      </ReadingLanguage.Provider>
-    </GradingLanguage.Provider>
+    <ProfileContext.Provider value={profile}>
+      <View style={styles.container}>
+        <SafeAreaProvider>
+          <StatusBar style="auto" />
+          <RootStack />
+        </SafeAreaProvider>
+      </View>
+    </ProfileContext.Provider>
   );
 }
 

@@ -131,15 +131,15 @@
                         "AttributeType": "S"
                     },
                     {
+                        "AttributeName": "readingId",
+                        "AttributeType": "S"
+                    },
+                    {
                         "AttributeName": "readerId",
                         "AttributeType": "S"
                     },
                     {
                         "AttributeName": "graderId",
-                        "AttributeType": "S"
-                    },
-                    {
-                        "AttributeName": "readingGradesId",
                         "AttributeType": "S"
                     }
                 ],
@@ -193,6 +193,34 @@
                 },
                 "GlobalSecondaryIndexes": [
                     {
+                        "IndexName": "gradesByReadingId",
+                        "KeySchema": [
+                            {
+                                "AttributeName": "readingId",
+                                "KeyType": "HASH"
+                            }
+                        ],
+                        "Projection": {
+                            "ProjectionType": "ALL"
+                        },
+                        "ProvisionedThroughput": {
+                            "Fn::If": [
+                                "ShouldUsePayPerRequestBilling",
+                                {
+                                    "Ref": "AWS::NoValue"
+                                },
+                                {
+                                    "ReadCapacityUnits": {
+                                        "Ref": "DynamoDBModelTableReadIOPS"
+                                    },
+                                    "WriteCapacityUnits": {
+                                        "Ref": "DynamoDBModelTableWriteIOPS"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
                         "IndexName": "gradesByReaderId",
                         "KeySchema": [
                             {
@@ -225,34 +253,6 @@
                         "KeySchema": [
                             {
                                 "AttributeName": "graderId",
-                                "KeyType": "HASH"
-                            }
-                        ],
-                        "Projection": {
-                            "ProjectionType": "ALL"
-                        },
-                        "ProvisionedThroughput": {
-                            "Fn::If": [
-                                "ShouldUsePayPerRequestBilling",
-                                {
-                                    "Ref": "AWS::NoValue"
-                                },
-                                {
-                                    "ReadCapacityUnits": {
-                                        "Ref": "DynamoDBModelTableReadIOPS"
-                                    },
-                                    "WriteCapacityUnits": {
-                                        "Ref": "DynamoDBModelTableWriteIOPS"
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "IndexName": "gsi-Reading.grades",
-                        "KeySchema": [
-                            {
-                                "AttributeName": "readingGradesId",
                                 "KeyType": "HASH"
                             }
                         ],
@@ -792,6 +792,70 @@
                                     [
                                         "Mutation",
                                         "deleteGrade",
+                                        "res",
+                                        "vtl"
+                                    ]
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "QuerygradesByReadingIdResolver": {
+            "Type": "AWS::AppSync::Resolver",
+            "Properties": {
+                "ApiId": {
+                    "Ref": "GetAttGraphQLAPIApiId"
+                },
+                "DataSourceName": {
+                    "Fn::GetAtt": [
+                        "GradeDataSource",
+                        "Name"
+                    ]
+                },
+                "FieldName": "gradesByReadingId",
+                "TypeName": "Query",
+                "RequestMappingTemplateS3Location": {
+                    "Fn::Sub": [
+                        "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/${ResolverFileName}",
+                        {
+                            "S3DeploymentBucket": {
+                                "Ref": "S3DeploymentBucket"
+                            },
+                            "S3DeploymentRootKey": {
+                                "Ref": "S3DeploymentRootKey"
+                            },
+                            "ResolverFileName": {
+                                "Fn::Join": [
+                                    ".",
+                                    [
+                                        "Query",
+                                        "gradesByReadingId",
+                                        "req",
+                                        "vtl"
+                                    ]
+                                ]
+                            }
+                        }
+                    ]
+                },
+                "ResponseMappingTemplateS3Location": {
+                    "Fn::Sub": [
+                        "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/${ResolverFileName}",
+                        {
+                            "S3DeploymentBucket": {
+                                "Ref": "S3DeploymentBucket"
+                            },
+                            "S3DeploymentRootKey": {
+                                "Ref": "S3DeploymentRootKey"
+                            },
+                            "ResolverFileName": {
+                                "Fn::Join": [
+                                    ".",
+                                    [
+                                        "Query",
+                                        "gradesByReadingId",
                                         "res",
                                         "vtl"
                                     ]

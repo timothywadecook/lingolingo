@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { GraphQLResult } from "@aws-amplify/api";
 import { API, graphqlOperation } from "aws-amplify";
 import { createReading as createReadingGql } from "../api/graphql/mutations";
 import { readingsByReaderId } from "../api/graphql/queries";
 import { Reading, CreateReadingInput } from "../api/passagesApi";
-import { useUser } from "./useUser";
+import { UserContext } from "../App";
 
 export function useMyReadings() {
   // user
-  const { id: userId } = useUser();
+  const [{ id: readerId }] = useContext(UserContext);
 
   // state
-  const [readings, setReadings] = useState([]);
+  const [readings, setReadings] = useState<Reading[]>([]);
   // listReadingsByReader
 
   // refreshing
@@ -27,7 +27,7 @@ export function useMyReadings() {
     try {
       const x = (await API.graphql(
         graphqlOperation(readingsByReaderId, {
-          readerId: userId,
+          readerId,
         })
       )) as GraphQLResult<Reading[]>;
 
@@ -41,7 +41,7 @@ export function useMyReadings() {
 
   useEffect(() => {
     refresh();
-  }, [userId]);
+  }, [readerId]);
 
   // create reading
   const createReading = async (input: CreateReadingInput) =>

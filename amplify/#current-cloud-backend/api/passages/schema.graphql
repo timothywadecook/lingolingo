@@ -1,33 +1,49 @@
-type Passage
+type Profile
   @model
   @key(
-    name: "relevantPassagesIndex"
-    fields: ["language", "difficulty"]
-    queryField: "passagesByLanguageAndDifficulty"
+    name: "profileByUserId"
+    fields: ["userId"]
+    queryField: "profileByUserId"
   ) {
   id: ID!
-  text: String!
-  difficulty: Int!
-  language: Language!
+  userId: ID!
+  gradingLanguage: String!
+  readingLanguage: String!
+  difficulty: String!
+  theme: String!
+  readings: [Reading!]
+    @connection(keyName: "readingsByReaderId", fields: ["userId"])
+  grades: [Grade!] @connection(keyName: "gradesByReaderId", fields: ["userId"])
 }
 
 type Reading
   @model
   @key(
-    name: "readingsByReaderIndex"
-    fields: ["readerId"]
+    name: "readingsByLanguage"
+    fields: ["language"]
+    queryField: "readingsByLanguage"
+  )
+  @key(
+    name: "readingsByReaderId"
+    fields: ["readerId", "language"]
     queryField: "readingsByReaderId"
   ) {
   id: ID!
-  passage: Passage @connection
-  recording: Recording!
-  language: Language!
+  text: String!
+  difficulty: String!
+  language: String!
   readerId: ID!
-  grades: [Grade] @connection
+  recording: Recording!
+  grades: [Grade!] @connection(keyName: "gradesByReadingId", fields: ["id"])
 }
 
 type Grade
   @model
+  @key(
+    name: "gradesByReadingId"
+    fields: ["readingId"]
+    queryField: "gradesByReadingId"
+  )
   @key(
     name: "gradesByReaderId"
     fields: ["readerId"]
@@ -39,15 +55,12 @@ type Grade
     queryField: "gradesByGraderId"
   ) {
   id: ID!
+  reading: Reading! @connection(fields: ["readingId"])
+  readingId: ID!
   readerId: ID!
   graderId: ID!
   soundsNative: Int!
   understandable: Int!
-}
-
-enum Language {
-  english
-  spanish
 }
 
 type Recording {

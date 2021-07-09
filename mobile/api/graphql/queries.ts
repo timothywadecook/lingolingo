@@ -2,30 +2,65 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getPassage = /* GraphQL */ `
-  query GetPassage($id: ID!) {
-    getPassage(id: $id) {
+export const getProfile = /* GraphQL */ `
+  query GetProfile($id: ID!) {
+    getProfile(id: $id) {
       id
-      text
+      userId
+      gradingLanguage
+      readingLanguage
       difficulty
-      language
+      theme
+      readings {
+        items {
+          id
+          text
+          difficulty
+          language
+          readerId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      grades {
+        items {
+          id
+          readingId
+          readerId
+          graderId
+          soundsNative
+          understandable
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
   }
 `;
-export const listPassages = /* GraphQL */ `
-  query ListPassages(
-    $filter: ModelPassageFilterInput
+export const listProfiles = /* GraphQL */ `
+  query ListProfiles(
+    $filter: ModelProfileFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listPassages(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listProfiles(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        text
+        userId
+        gradingLanguage
+        readingLanguage
         difficulty
-        language
+        theme
+        readings {
+          nextToken
+        }
+        grades {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -37,24 +72,19 @@ export const getReading = /* GraphQL */ `
   query GetReading($id: ID!) {
     getReading(id: $id) {
       id
-      passage {
-        id
-        text
-        difficulty
-        language
-        createdAt
-        updatedAt
-      }
+      text
+      difficulty
+      language
+      readerId
       recording {
         bucket
         key
         region
       }
-      language
-      readerId
       grades {
         items {
           id
+          readingId
           readerId
           graderId
           soundsNative
@@ -78,21 +108,15 @@ export const listReadings = /* GraphQL */ `
     listReadings(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        passage {
-          id
-          text
-          difficulty
-          language
-          createdAt
-          updatedAt
-        }
+        text
+        difficulty
+        language
+        readerId
         recording {
           bucket
           key
           region
         }
-        language
-        readerId
         grades {
           nextToken
         }
@@ -107,6 +131,24 @@ export const getGrade = /* GraphQL */ `
   query GetGrade($id: ID!) {
     getGrade(id: $id) {
       id
+      reading {
+        id
+        text
+        difficulty
+        language
+        readerId
+        recording {
+          bucket
+          key
+          region
+        }
+        grades {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      readingId
       readerId
       graderId
       soundsNative
@@ -125,6 +167,16 @@ export const listGrades = /* GraphQL */ `
     listGrades(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        reading {
+          id
+          text
+          difficulty
+          language
+          readerId
+          createdAt
+          updatedAt
+        }
+        readingId
         readerId
         graderId
         soundsNative
@@ -136,18 +188,51 @@ export const listGrades = /* GraphQL */ `
     }
   }
 `;
-export const passagesByLanguageAndDifficulty = /* GraphQL */ `
-  query PassagesByLanguageAndDifficulty(
-    $language: Language
-    $difficulty: ModelIntKeyConditionInput
+export const profileByUserId = /* GraphQL */ `
+  query ProfileByUserId(
+    $userId: ID
     $sortDirection: ModelSortDirection
-    $filter: ModelPassageFilterInput
+    $filter: ModelProfileFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    passagesByLanguageAndDifficulty(
+    profileByUserId(
+      userId: $userId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        gradingLanguage
+        readingLanguage
+        difficulty
+        theme
+        readings {
+          nextToken
+        }
+        grades {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const readingsByLanguage = /* GraphQL */ `
+  query ReadingsByLanguage(
+    $language: String
+    $sortDirection: ModelSortDirection
+    $filter: ModelReadingFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    readingsByLanguage(
       language: $language
-      difficulty: $difficulty
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
@@ -158,6 +243,15 @@ export const passagesByLanguageAndDifficulty = /* GraphQL */ `
         text
         difficulty
         language
+        readerId
+        recording {
+          bucket
+          key
+          region
+        }
+        grades {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -168,6 +262,7 @@ export const passagesByLanguageAndDifficulty = /* GraphQL */ `
 export const readingsByReaderId = /* GraphQL */ `
   query ReadingsByReaderId(
     $readerId: ID
+    $language: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelReadingFilterInput
     $limit: Int
@@ -175,6 +270,7 @@ export const readingsByReaderId = /* GraphQL */ `
   ) {
     readingsByReaderId(
       readerId: $readerId
+      language: $language
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
@@ -182,24 +278,56 @@ export const readingsByReaderId = /* GraphQL */ `
     ) {
       items {
         id
-        passage {
-          id
-          text
-          difficulty
-          language
-          createdAt
-          updatedAt
-        }
+        text
+        difficulty
+        language
+        readerId
         recording {
           bucket
           key
           region
         }
-        language
-        readerId
         grades {
           nextToken
         }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const gradesByReadingId = /* GraphQL */ `
+  query GradesByReadingId(
+    $readingId: ID
+    $sortDirection: ModelSortDirection
+    $filter: ModelGradeFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    gradesByReadingId(
+      readingId: $readingId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        reading {
+          id
+          text
+          difficulty
+          language
+          readerId
+          createdAt
+          updatedAt
+        }
+        readingId
+        readerId
+        graderId
+        soundsNative
+        understandable
         createdAt
         updatedAt
       }
@@ -224,6 +352,16 @@ export const gradesByReaderId = /* GraphQL */ `
     ) {
       items {
         id
+        reading {
+          id
+          text
+          difficulty
+          language
+          readerId
+          createdAt
+          updatedAt
+        }
+        readingId
         readerId
         graderId
         soundsNative
@@ -252,6 +390,16 @@ export const gradesByGraderId = /* GraphQL */ `
     ) {
       items {
         id
+        reading {
+          id
+          text
+          difficulty
+          language
+          readerId
+          createdAt
+          updatedAt
+        }
+        readingId
         readerId
         graderId
         soundsNative

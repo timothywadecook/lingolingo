@@ -1,23 +1,47 @@
 import React, { useState } from "react";
 import { Card, Text, View, Slider, Button, Colors } from "react-native-ui-lib";
 import { Feather } from "@expo/vector-icons";
-import { Passage } from "../api/passagesApi";
+import { useGradingCard } from "../hooks/useGradingCard";
+import { CreateGradeInput } from "../api/passagesApi";
+import { useContext } from "react";
+import { ProfileContext } from "../App";
 
 type Props = {
-  passage: Passage;
+  onSubmit: () => void;
 };
-export function GradingCard({ passage }: Props) {
-  // state
+
+export function GradingCard({ onSubmit }: Props) {
+  // grading state
   const [understandable, setUnderstandable] = useState(1);
   const [soundsNative, setSoundsNative] = useState(1);
 
+  // user
+  const { userId } = useContext(ProfileContext);
+
+  // this reading
+  const { reading, createGrade: _createGrade, processing } = useGradingCard();
+
+  const createGrade = () => {
+    const input: CreateGradeInput = {
+      readingId: reading.id,
+      readerId: reading.readerId,
+      graderId: userId,
+      soundsNative,
+      understandable,
+    };
+    _createGrade(input);
+    onSubmit();
+  };
+
+  const playRecording = () => {};
+
   return (
-    <Card flex padding-34 margin-6>
+    <Card flex padding-34>
       <Text marginB-12 heading>
-        {passage.text}
+        {reading?.text}
       </Text>
       <View marginV-24 row spread centerV>
-        <Text body>{passage.difficulty}</Text>
+        <Text body>{reading?.difficulty}</Text>
         <Button
           padding-5
           enableShadow
@@ -27,7 +51,7 @@ export function GradingCard({ passage }: Props) {
           )}
         />
 
-        <Text body>{passage.language}</Text>
+        <Text body>{reading?.language}</Text>
       </View>
       <Text marginT-20>Understandable {understandable}</Text>
       <Slider
@@ -44,6 +68,13 @@ export function GradingCard({ passage }: Props) {
         minimumValue={1}
         maximumValue={10}
         step={1}
+      />
+
+      <Button
+        marginT-24
+        padding-5
+        backgroundColor={Colors.primaryColor}
+        label="Submit Grade"
       />
     </Card>
   );

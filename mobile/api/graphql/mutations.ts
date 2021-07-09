@@ -2,46 +2,127 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createPassage = /* GraphQL */ `
-  mutation CreatePassage(
-    $input: CreatePassageInput!
-    $condition: ModelPassageConditionInput
+export const createProfile = /* GraphQL */ `
+  mutation CreateProfile(
+    $input: CreateProfileInput!
+    $condition: ModelProfileConditionInput
   ) {
-    createPassage(input: $input, condition: $condition) {
+    createProfile(input: $input, condition: $condition) {
       id
-      text
+      userId
+      gradingLanguage
+      readingLanguage
       difficulty
-      language
+      theme
+      readings {
+        items {
+          id
+          text
+          difficulty
+          language
+          readerId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      grades {
+        items {
+          id
+          readingId
+          readerId
+          graderId
+          soundsNative
+          understandable
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
   }
 `;
-export const updatePassage = /* GraphQL */ `
-  mutation UpdatePassage(
-    $input: UpdatePassageInput!
-    $condition: ModelPassageConditionInput
+export const updateProfile = /* GraphQL */ `
+  mutation UpdateProfile(
+    $input: UpdateProfileInput!
+    $condition: ModelProfileConditionInput
   ) {
-    updatePassage(input: $input, condition: $condition) {
+    updateProfile(input: $input, condition: $condition) {
       id
-      text
+      userId
+      gradingLanguage
+      readingLanguage
       difficulty
-      language
+      theme
+      readings {
+        items {
+          id
+          text
+          difficulty
+          language
+          readerId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      grades {
+        items {
+          id
+          readingId
+          readerId
+          graderId
+          soundsNative
+          understandable
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
   }
 `;
-export const deletePassage = /* GraphQL */ `
-  mutation DeletePassage(
-    $input: DeletePassageInput!
-    $condition: ModelPassageConditionInput
+export const deleteProfile = /* GraphQL */ `
+  mutation DeleteProfile(
+    $input: DeleteProfileInput!
+    $condition: ModelProfileConditionInput
   ) {
-    deletePassage(input: $input, condition: $condition) {
+    deleteProfile(input: $input, condition: $condition) {
       id
-      text
+      userId
+      gradingLanguage
+      readingLanguage
       difficulty
-      language
+      theme
+      readings {
+        items {
+          id
+          text
+          difficulty
+          language
+          readerId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      grades {
+        items {
+          id
+          readingId
+          readerId
+          graderId
+          soundsNative
+          understandable
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -54,24 +135,19 @@ export const createReading = /* GraphQL */ `
   ) {
     createReading(input: $input, condition: $condition) {
       id
-      passage {
-        id
-        text
-        difficulty
-        language
-        createdAt
-        updatedAt
-      }
+      text
+      difficulty
+      language
+      readerId
       recording {
         bucket
         key
         region
       }
-      language
-      readerId
       grades {
         items {
           id
+          readingId
           readerId
           graderId
           soundsNative
@@ -93,24 +169,19 @@ export const updateReading = /* GraphQL */ `
   ) {
     updateReading(input: $input, condition: $condition) {
       id
-      passage {
-        id
-        text
-        difficulty
-        language
-        createdAt
-        updatedAt
-      }
+      text
+      difficulty
+      language
+      readerId
       recording {
         bucket
         key
         region
       }
-      language
-      readerId
       grades {
         items {
           id
+          readingId
           readerId
           graderId
           soundsNative
@@ -132,24 +203,19 @@ export const deleteReading = /* GraphQL */ `
   ) {
     deleteReading(input: $input, condition: $condition) {
       id
-      passage {
-        id
-        text
-        difficulty
-        language
-        createdAt
-        updatedAt
-      }
+      text
+      difficulty
+      language
+      readerId
       recording {
         bucket
         key
         region
       }
-      language
-      readerId
       grades {
         items {
           id
+          readingId
           readerId
           graderId
           soundsNative
@@ -171,6 +237,24 @@ export const createGrade = /* GraphQL */ `
   ) {
     createGrade(input: $input, condition: $condition) {
       id
+      reading {
+        id
+        text
+        difficulty
+        language
+        readerId
+        recording {
+          bucket
+          key
+          region
+        }
+        grades {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      readingId
       readerId
       graderId
       soundsNative
@@ -187,6 +271,24 @@ export const updateGrade = /* GraphQL */ `
   ) {
     updateGrade(input: $input, condition: $condition) {
       id
+      reading {
+        id
+        text
+        difficulty
+        language
+        readerId
+        recording {
+          bucket
+          key
+          region
+        }
+        grades {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      readingId
       readerId
       graderId
       soundsNative
@@ -203,6 +305,24 @@ export const deleteGrade = /* GraphQL */ `
   ) {
     deleteGrade(input: $input, condition: $condition) {
       id
+      reading {
+        id
+        text
+        difficulty
+        language
+        readerId
+        recording {
+          bucket
+          key
+          region
+        }
+        grades {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      readingId
       readerId
       graderId
       soundsNative

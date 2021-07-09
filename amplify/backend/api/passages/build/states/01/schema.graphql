@@ -1,0 +1,335 @@
+type Profile {
+  id: ID!
+  userId: ID!
+  gradingLanguage: String!
+  readingLanguage: String!
+  difficulty: String!
+  theme: String!
+  readings(language: ModelStringKeyConditionInput, filter: ModelReadingFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelReadingConnection
+  grades(filter: ModelGradeFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelGradeConnection
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Reading {
+  id: ID!
+  text: String!
+  difficulty: String!
+  language: String!
+  readerId: ID!
+  recording: Recording!
+  grades(filter: ModelGradeFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelGradeConnection
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Grade {
+  id: ID!
+  reading: Reading!
+  readingId: ID!
+  readerId: ID!
+  graderId: ID!
+  soundsNative: Int!
+  understandable: Int!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Recording {
+  bucket: String!
+  key: String!
+  region: String!
+}
+
+enum ModelSortDirection {
+  ASC
+  DESC
+}
+
+type ModelProfileConnection {
+  items: [Profile]
+  nextToken: String
+}
+
+input ModelStringInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelIDInput {
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelIntInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelFloatInput {
+  ne: Float
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+  between: [Float]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelBooleanInput {
+  ne: Boolean
+  eq: Boolean
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelSizeInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+}
+
+input ModelProfileFilterInput {
+  id: ModelIDInput
+  userId: ModelIDInput
+  gradingLanguage: ModelStringInput
+  readingLanguage: ModelStringInput
+  difficulty: ModelStringInput
+  theme: ModelStringInput
+  and: [ModelProfileFilterInput]
+  or: [ModelProfileFilterInput]
+  not: ModelProfileFilterInput
+}
+
+enum ModelAttributeTypes {
+  binary
+  binarySet
+  bool
+  list
+  map
+  number
+  numberSet
+  string
+  stringSet
+  _null
+}
+
+type Query {
+  getProfile(id: ID!): Profile
+  listProfiles(filter: ModelProfileFilterInput, limit: Int, nextToken: String): ModelProfileConnection
+  getReading(id: ID!): Reading
+  listReadings(filter: ModelReadingFilterInput, limit: Int, nextToken: String): ModelReadingConnection
+  getGrade(id: ID!): Grade
+  listGrades(filter: ModelGradeFilterInput, limit: Int, nextToken: String): ModelGradeConnection
+  profileByUserId(userId: ID, sortDirection: ModelSortDirection, filter: ModelProfileFilterInput, limit: Int, nextToken: String): ModelProfileConnection
+  readingsByReaderId(readerId: ID, language: ModelStringKeyConditionInput, sortDirection: ModelSortDirection, filter: ModelReadingFilterInput, limit: Int, nextToken: String): ModelReadingConnection
+  gradesByReadingId(readingId: ID, sortDirection: ModelSortDirection, filter: ModelGradeFilterInput, limit: Int, nextToken: String): ModelGradeConnection
+  gradesByReaderId(readerId: ID, sortDirection: ModelSortDirection, filter: ModelGradeFilterInput, limit: Int, nextToken: String): ModelGradeConnection
+  gradesByGraderId(graderId: ID, sortDirection: ModelSortDirection, filter: ModelGradeFilterInput, limit: Int, nextToken: String): ModelGradeConnection
+}
+
+input CreateProfileInput {
+  id: ID
+  userId: ID!
+  gradingLanguage: String!
+  readingLanguage: String!
+  difficulty: String!
+  theme: String!
+}
+
+input UpdateProfileInput {
+  id: ID!
+  userId: ID
+  gradingLanguage: String
+  readingLanguage: String
+  difficulty: String
+  theme: String
+}
+
+input DeleteProfileInput {
+  id: ID!
+}
+
+type Mutation {
+  createProfile(input: CreateProfileInput!, condition: ModelProfileConditionInput): Profile
+  updateProfile(input: UpdateProfileInput!, condition: ModelProfileConditionInput): Profile
+  deleteProfile(input: DeleteProfileInput!, condition: ModelProfileConditionInput): Profile
+  createReading(input: CreateReadingInput!, condition: ModelReadingConditionInput): Reading
+  updateReading(input: UpdateReadingInput!, condition: ModelReadingConditionInput): Reading
+  deleteReading(input: DeleteReadingInput!, condition: ModelReadingConditionInput): Reading
+  createGrade(input: CreateGradeInput!, condition: ModelGradeConditionInput): Grade
+  updateGrade(input: UpdateGradeInput!, condition: ModelGradeConditionInput): Grade
+  deleteGrade(input: DeleteGradeInput!, condition: ModelGradeConditionInput): Grade
+}
+
+input ModelProfileConditionInput {
+  userId: ModelIDInput
+  gradingLanguage: ModelStringInput
+  readingLanguage: ModelStringInput
+  difficulty: ModelStringInput
+  theme: ModelStringInput
+  and: [ModelProfileConditionInput]
+  or: [ModelProfileConditionInput]
+  not: ModelProfileConditionInput
+}
+
+type Subscription {
+  onCreateProfile: Profile @aws_subscribe(mutations: ["createProfile"])
+  onUpdateProfile: Profile @aws_subscribe(mutations: ["updateProfile"])
+  onDeleteProfile: Profile @aws_subscribe(mutations: ["deleteProfile"])
+  onCreateReading: Reading @aws_subscribe(mutations: ["createReading"])
+  onUpdateReading: Reading @aws_subscribe(mutations: ["updateReading"])
+  onDeleteReading: Reading @aws_subscribe(mutations: ["deleteReading"])
+  onCreateGrade: Grade @aws_subscribe(mutations: ["createGrade"])
+  onUpdateGrade: Grade @aws_subscribe(mutations: ["updateGrade"])
+  onDeleteGrade: Grade @aws_subscribe(mutations: ["deleteGrade"])
+}
+
+input RecordingInput {
+  bucket: String!
+  key: String!
+  region: String!
+}
+
+type ModelReadingConnection {
+  items: [Reading]
+  nextToken: String
+}
+
+input ModelReadingFilterInput {
+  id: ModelIDInput
+  text: ModelStringInput
+  difficulty: ModelStringInput
+  language: ModelStringInput
+  readerId: ModelIDInput
+  and: [ModelReadingFilterInput]
+  or: [ModelReadingFilterInput]
+  not: ModelReadingFilterInput
+}
+
+input CreateReadingInput {
+  id: ID
+  text: String!
+  difficulty: String!
+  language: String!
+  readerId: ID!
+  recording: RecordingInput!
+}
+
+input UpdateReadingInput {
+  id: ID!
+  text: String
+  difficulty: String
+  language: String
+  readerId: ID
+  recording: RecordingInput
+}
+
+input DeleteReadingInput {
+  id: ID!
+}
+
+input ModelReadingConditionInput {
+  text: ModelStringInput
+  difficulty: ModelStringInput
+  language: ModelStringInput
+  readerId: ModelIDInput
+  and: [ModelReadingConditionInput]
+  or: [ModelReadingConditionInput]
+  not: ModelReadingConditionInput
+}
+
+type ModelGradeConnection {
+  items: [Grade]
+  nextToken: String
+}
+
+input ModelGradeFilterInput {
+  id: ModelIDInput
+  readingId: ModelIDInput
+  readerId: ModelIDInput
+  graderId: ModelIDInput
+  soundsNative: ModelIntInput
+  understandable: ModelIntInput
+  and: [ModelGradeFilterInput]
+  or: [ModelGradeFilterInput]
+  not: ModelGradeFilterInput
+}
+
+input CreateGradeInput {
+  id: ID
+  readingId: ID!
+  readerId: ID!
+  graderId: ID!
+  soundsNative: Int!
+  understandable: Int!
+}
+
+input UpdateGradeInput {
+  id: ID!
+  readingId: ID
+  readerId: ID
+  graderId: ID
+  soundsNative: Int
+  understandable: Int
+}
+
+input DeleteGradeInput {
+  id: ID!
+}
+
+input ModelGradeConditionInput {
+  readingId: ModelIDInput
+  readerId: ModelIDInput
+  graderId: ModelIDInput
+  soundsNative: ModelIntInput
+  understandable: ModelIntInput
+  and: [ModelGradeConditionInput]
+  or: [ModelGradeConditionInput]
+  not: ModelGradeConditionInput
+}
+
+input ModelStringKeyConditionInput {
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  between: [String]
+  beginsWith: String
+}

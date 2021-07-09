@@ -2,7 +2,9 @@
 
 
 
-#set( $optionalNonNullableFields = ["readerId", "graderId", "soundsNative", "understandable"] )
+
+
+#set( $optionalNonNullableFields = ["readingId", "readerId", "graderId", "soundsNative", "understandable"] )
 #foreach( $field in $optionalNonNullableFields )
   #if( $context.arguments.input.keySet().contains($field) && $util.isNull($context.args.input.get($field)) )
 $util.error("An argument you marked as Non-Null is set to Null in the query or the body of your request.")

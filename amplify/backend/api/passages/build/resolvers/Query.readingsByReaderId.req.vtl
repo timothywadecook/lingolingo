@@ -1,8 +1,10 @@
 ## [Start] Set query expression for @key **
-#if( !$util.isNull($ctx.args.sortDirection) )
-  $util.error("sortDirection is not supported for List operations without a Sort key defined.", "InvalidArgumentsError")
-#end
 #set( $modelQueryExpression = {} )
+## [Start] Validate key arguments. **
+#if( !$util.isNull($ctx.args.language) && $util.isNull($ctx.args.readerId) )
+  $util.error("When providing argument 'language' you must also provide arguments readerId", "InvalidArgumentsError")
+#end
+## [End] Validate key arguments. **
 #if( !$util.isNull($ctx.args.readerId) )
   #set( $modelQueryExpression.expression = "#readerId = :readerId" )
   #set( $modelQueryExpression.expressionNames = {
@@ -14,6 +16,44 @@
   }
 } )
 #end
+## [Start] Applying Key Condition **
+#if( !$util.isNull($ctx.args.language) && !$util.isNull($ctx.args.language.beginsWith) )
+  #set( $modelQueryExpression.expression = "$modelQueryExpression.expression AND begins_with(#sortKey, :sortKey)" )
+  $util.qr($modelQueryExpression.expressionNames.put("#sortKey", "language"))
+  $util.qr($modelQueryExpression.expressionValues.put(":sortKey", { "S": "$ctx.args.language.beginsWith" }))
+#end
+#if( !$util.isNull($ctx.args.language) && !$util.isNull($ctx.args.language.between) )
+  #set( $modelQueryExpression.expression = "$modelQueryExpression.expression AND #sortKey BETWEEN :sortKey0 AND :sortKey1" )
+  $util.qr($modelQueryExpression.expressionNames.put("#sortKey", "language"))
+  $util.qr($modelQueryExpression.expressionValues.put(":sortKey0", { "S": "$ctx.args.language.between[0]" }))
+  $util.qr($modelQueryExpression.expressionValues.put(":sortKey1", { "S": "$ctx.args.language.between[1]" }))
+#end
+#if( !$util.isNull($ctx.args.language) && !$util.isNull($ctx.args.language.eq) )
+  #set( $modelQueryExpression.expression = "$modelQueryExpression.expression AND #sortKey = :sortKey" )
+  $util.qr($modelQueryExpression.expressionNames.put("#sortKey", "language"))
+  $util.qr($modelQueryExpression.expressionValues.put(":sortKey", { "S": "$ctx.args.language.eq" }))
+#end
+#if( !$util.isNull($ctx.args.language) && !$util.isNull($ctx.args.language.lt) )
+  #set( $modelQueryExpression.expression = "$modelQueryExpression.expression AND #sortKey < :sortKey" )
+  $util.qr($modelQueryExpression.expressionNames.put("#sortKey", "language"))
+  $util.qr($modelQueryExpression.expressionValues.put(":sortKey", { "S": "$ctx.args.language.lt" }))
+#end
+#if( !$util.isNull($ctx.args.language) && !$util.isNull($ctx.args.language.le) )
+  #set( $modelQueryExpression.expression = "$modelQueryExpression.expression AND #sortKey <= :sortKey" )
+  $util.qr($modelQueryExpression.expressionNames.put("#sortKey", "language"))
+  $util.qr($modelQueryExpression.expressionValues.put(":sortKey", { "S": "$ctx.args.language.le" }))
+#end
+#if( !$util.isNull($ctx.args.language) && !$util.isNull($ctx.args.language.gt) )
+  #set( $modelQueryExpression.expression = "$modelQueryExpression.expression AND #sortKey > :sortKey" )
+  $util.qr($modelQueryExpression.expressionNames.put("#sortKey", "language"))
+  $util.qr($modelQueryExpression.expressionValues.put(":sortKey", { "S": "$ctx.args.language.gt" }))
+#end
+#if( !$util.isNull($ctx.args.language) && !$util.isNull($ctx.args.language.ge) )
+  #set( $modelQueryExpression.expression = "$modelQueryExpression.expression AND #sortKey >= :sortKey" )
+  $util.qr($modelQueryExpression.expressionNames.put("#sortKey", "language"))
+  $util.qr($modelQueryExpression.expressionValues.put(":sortKey", { "S": "$ctx.args.language.ge" }))
+#end
+## [End] Applying Key Condition **
 ## [End] Set query expression for @key **
 #set( $limit = $util.defaultIfNull($context.args.limit, 100) )
 #set( $QueryRequest = {
@@ -21,7 +61,7 @@
   "operation": "Query",
   "limit": $limit,
   "query": $modelQueryExpression,
-  "index": "readingsByReaderIndex"
+  "index": "readingsByReaderId"
 } )
 #if( !$util.isNull($ctx.args.sortDirection)
                     && $ctx.args.sortDirection == "DESC" )

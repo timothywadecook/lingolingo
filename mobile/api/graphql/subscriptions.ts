@@ -2,37 +2,118 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreatePassage = /* GraphQL */ `
-  subscription OnCreatePassage {
-    onCreatePassage {
+export const onCreateProfile = /* GraphQL */ `
+  subscription OnCreateProfile {
+    onCreateProfile {
       id
-      text
+      userId
+      gradingLanguage
+      readingLanguage
       difficulty
-      language
+      theme
+      readings {
+        items {
+          id
+          text
+          difficulty
+          language
+          readerId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      grades {
+        items {
+          id
+          readingId
+          readerId
+          graderId
+          soundsNative
+          understandable
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
   }
 `;
-export const onUpdatePassage = /* GraphQL */ `
-  subscription OnUpdatePassage {
-    onUpdatePassage {
+export const onUpdateProfile = /* GraphQL */ `
+  subscription OnUpdateProfile {
+    onUpdateProfile {
       id
-      text
+      userId
+      gradingLanguage
+      readingLanguage
       difficulty
-      language
+      theme
+      readings {
+        items {
+          id
+          text
+          difficulty
+          language
+          readerId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      grades {
+        items {
+          id
+          readingId
+          readerId
+          graderId
+          soundsNative
+          understandable
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
   }
 `;
-export const onDeletePassage = /* GraphQL */ `
-  subscription OnDeletePassage {
-    onDeletePassage {
+export const onDeleteProfile = /* GraphQL */ `
+  subscription OnDeleteProfile {
+    onDeleteProfile {
       id
-      text
+      userId
+      gradingLanguage
+      readingLanguage
       difficulty
-      language
+      theme
+      readings {
+        items {
+          id
+          text
+          difficulty
+          language
+          readerId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      grades {
+        items {
+          id
+          readingId
+          readerId
+          graderId
+          soundsNative
+          understandable
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -42,24 +123,19 @@ export const onCreateReading = /* GraphQL */ `
   subscription OnCreateReading {
     onCreateReading {
       id
-      passage {
-        id
-        text
-        difficulty
-        language
-        createdAt
-        updatedAt
-      }
+      text
+      difficulty
+      language
+      readerId
       recording {
         bucket
         key
         region
       }
-      language
-      readerId
       grades {
         items {
           id
+          readingId
           readerId
           graderId
           soundsNative
@@ -78,24 +154,19 @@ export const onUpdateReading = /* GraphQL */ `
   subscription OnUpdateReading {
     onUpdateReading {
       id
-      passage {
-        id
-        text
-        difficulty
-        language
-        createdAt
-        updatedAt
-      }
+      text
+      difficulty
+      language
+      readerId
       recording {
         bucket
         key
         region
       }
-      language
-      readerId
       grades {
         items {
           id
+          readingId
           readerId
           graderId
           soundsNative
@@ -114,24 +185,19 @@ export const onDeleteReading = /* GraphQL */ `
   subscription OnDeleteReading {
     onDeleteReading {
       id
-      passage {
-        id
-        text
-        difficulty
-        language
-        createdAt
-        updatedAt
-      }
+      text
+      difficulty
+      language
+      readerId
       recording {
         bucket
         key
         region
       }
-      language
-      readerId
       grades {
         items {
           id
+          readingId
           readerId
           graderId
           soundsNative
@@ -150,6 +216,24 @@ export const onCreateGrade = /* GraphQL */ `
   subscription OnCreateGrade {
     onCreateGrade {
       id
+      reading {
+        id
+        text
+        difficulty
+        language
+        readerId
+        recording {
+          bucket
+          key
+          region
+        }
+        grades {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      readingId
       readerId
       graderId
       soundsNative
@@ -163,6 +247,24 @@ export const onUpdateGrade = /* GraphQL */ `
   subscription OnUpdateGrade {
     onUpdateGrade {
       id
+      reading {
+        id
+        text
+        difficulty
+        language
+        readerId
+        recording {
+          bucket
+          key
+          region
+        }
+        grades {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      readingId
       readerId
       graderId
       soundsNative
@@ -176,6 +278,24 @@ export const onDeleteGrade = /* GraphQL */ `
   subscription OnDeleteGrade {
     onDeleteGrade {
       id
+      reading {
+        id
+        text
+        difficulty
+        language
+        readerId
+        recording {
+          bucket
+          key
+          region
+        }
+        grades {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      readingId
       readerId
       graderId
       soundsNative
